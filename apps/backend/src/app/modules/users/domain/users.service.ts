@@ -1,19 +1,20 @@
 import { IUsersRepository, IUsersRepositoryToken } from './users.repository';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { Role, User } from './user';
 import { v4 as uuid } from 'uuid';
+import { CreateUserDto } from '@bookings-app/shared-types';
 
 @Injectable()
 export class UsersService {
   constructor(@Inject(IUsersRepositoryToken) private readonly repository: IUsersRepository) {}
 
-  async registerUser(name: string, email: string, secret: string): Promise<User> {
-    const existing = await this.repository.findByEmail(email);
+  async create(dto: CreateUserDto): Promise<User> {
+    const existing = await this.repository.findByEmail(dto.email);
     if (existing) {
-      throw new Error('User already exists with this email');
+      throw new UnprocessableEntityException('User already exists with this email');
     }
 
-    const user = new User(uuid(), name, email, secret, Role.USER);
+    const user = new User(uuid(), dto.name, dto.email, dto.password, Role.USER);
     return await this.repository.save(user);
   }
 

@@ -12,6 +12,8 @@
       "@modules/*": ["./src/app/modules/*"],
       "@users/*": ["./src/app/modules/users/*"],
       "@config/*": ["./config/*"],
+      "@common/*": ["./src/app/common/*"],
+      "@bookings-app/shared-types": ["../../libs/shared-types/src/index"]
     }
   },
   "include": ["src/**/*.ts"],
