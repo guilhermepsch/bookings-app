@@ -1,13 +1,13 @@
 import { User } from '../../domain/user';
-import { UserEntity } from './user.entity';
+import { MikroOrmUserEntity } from './mikro-orm.user.entity';
 
-export class UsersMapper {
-  static toDomain(entity: UserEntity): User {
+export class MikroOrkmUsersMapper {
+  static toDomain(entity: MikroOrmUserEntity): User {
     return new User(entity.id, entity.name, entity.email, entity.secret, entity.role);
   }
 
-  static toEntity(user: User): UserEntity {
-    const entity = new UserEntity();
+  static toEntity(user: User): MikroOrmUserEntity {
+    const entity = new MikroOrmUserEntity();
     entity.id = user.id;
     entity.name = user.name;
     entity.email = user.email;

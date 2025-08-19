@@ -2,6 +2,7 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { UsersService } from '../domain/users.service';
 import { CreateUserDto, CreateUserSchema } from '@bookings-app/shared-types';
 import { ZodPipe } from '@common/pipes/zod-validation.pipe';
+import { Public } from '@common/decorators/is-public.decorator';
 
 @Controller('users')
 export class UsersController {

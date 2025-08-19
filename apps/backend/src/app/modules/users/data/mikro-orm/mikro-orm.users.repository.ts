@@ -1,29 +1,29 @@
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { User } from '../../domain/user';
-import { UsersMapper } from './users.mapper';
-import { UserEntity } from './user.entity';
+import { MikroOrkmUsersMapper } from './mikro-orkm.users.mapper';
+import { MikroOrmUserEntity } from './mikro-orm.user.entity';
 import { EntityRepository } from '@mikro-orm/core';
-import { IUsersRepository } from '../../domain/users.repository';
+import { IUsersRepository } from '../../domain/users.repository.interface';
 
 
 export class MikroOrmUsersRepository implements IUsersRepository {
   constructor(
-    @InjectRepository(UserEntity)
-    private readonly repo: EntityRepository<UserEntity>,
+    @InjectRepository(MikroOrmUserEntity)
+    private readonly repo: EntityRepository<MikroOrmUserEntity>,
   ) {}
 
   async findById(id: string): Promise<User | null> {
     const orm = await this.repo.findOne({ id });
-    return orm ? UsersMapper.toDomain(orm) : null;
+    return orm ? MikroOrkmUsersMapper.toDomain(orm) : null;
   }
 
   async findByEmail(email: string): Promise<User | null> {
     const orm = await this.repo.findOne({ email });
-    return orm ? UsersMapper.toDomain(orm) : null;
+    return orm ? MikroOrkmUsersMapper.toDomain(orm) : null;
   }
 
   async save(user: User): Promise<User> {
-    const entity = UsersMapper.toEntity(user);
+    const entity = MikroOrkmUsersMapper.toEntity(user);
     await this.repo.insert(entity);
     return user;
   }

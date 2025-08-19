@@ -1,3 +1,5 @@
+import { Role } from '@bookings-app/shared-types';
+
 export class User {
   constructor(
     public readonly id: string,
@@ -7,9 +9,4 @@ export class User {
     public readonly role: Role
   ) {
   }
-}
-
-export enum Role {
-  USER = 'USER',
-  ADMIN = 'ADMIN',
 }

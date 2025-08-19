@@ -1,9 +1,9 @@
 import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
 import { v4 as uuid } from 'uuid';
-import { Role } from '../../domain/user';
+import { Role } from '@bookings-app/shared-types';
 
 @Entity({ tableName: 'users' })
-export class UserEntity {
+export class MikroOrmUserEntity {
   @PrimaryKey({ type: 'uuid' })
   id: string = uuid();
 
