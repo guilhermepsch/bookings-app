@@ -1,9 +1,9 @@
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
-import { ResponseMiddleware } from '@common/middlewares/response.middleware';
-import { GlobalHttpExceptionFilter } from '@common/filters/http-exception.filter';
-import { ZodExceptionFilter } from '@common/filters/zod-exception.filter';
+import { ZodExceptionFilter } from './app/common/filters/zod-exception.filter';
+import { ResponseMiddleware } from './app/common/middlewares/response.middleware';
+import { GlobalHttpExceptionFilter } from './app/common/filters/http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

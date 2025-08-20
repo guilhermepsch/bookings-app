@@ -16,7 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@bookings-app/shared-types": ["libs/shared-types/src/index.ts"],
-      "@bookings-app/test": ["libs/test/src/index.ts"]
+      "@bookings-app/test": ["libs/test/src/index.ts"],
     }
   },
   "exclude": ["node_modules", "tmp"]

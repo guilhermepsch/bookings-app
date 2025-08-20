@@ -1,6 +1,6 @@
-import { WinstonLoggerService } from '@common/resources/logger/data/winston/winston.logger.service';
-import { ILoggerService } from '@common/resources/logger/domain/logger.service.interface';
 import { Module } from '@nestjs/common';
+import { WinstonLoggerService } from './data/winston/winston.logger.service';
+import { ILoggerService } from './domain/logger.service.interface';
 
 @Module({
   providers: [

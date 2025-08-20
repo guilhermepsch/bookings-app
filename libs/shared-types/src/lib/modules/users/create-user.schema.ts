@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Role } from './user-roles.dto';
+import { Role } from './user-constants.dto';
 
 export const CreateUserSchema = z.object({
   name: z.string().min(1).max(255),

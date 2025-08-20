@@ -1,36 +1,21 @@
-import { Injectable, NestMiddleware } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
-
-interface PaginatedMeta {
-  total: number;
-  page: number;
-  pageSize: number;
-}
-
-interface GenericResponse<T> {
-  success: boolean;
-  message?: string;
-  data: T;
-  meta?: PaginatedMeta;
-}
-
-type ControllerResponse<T> =
-  | T
-  | { data: T; message?: string; meta?: PaginatedMeta };
+import { z } from 'zod';
+import { GenericResponseSchema, PaginatedMetaSchema, PaginatedResponseSchema } from '@bookings-app/shared-types';
 
 @Injectable()
 export class ResponseMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
     const originalJson = res.json.bind(res);
 
-    res.json = (body: ControllerResponse<any>) => {
-      if (body && (body as any).success !== undefined) {
+    res.json = (body: unknown) => {
+      if (body && typeof body === 'object' && 'success' in (body as any)) {
         return originalJson(body);
       }
 
-      let response: GenericResponse<any>;
+      let response: any;
 
-      if (body && (body as any).data !== undefined) {
+      if (body && typeof body === 'object' && 'data' in (body as any)) {
         const { data, message, meta } = body as any;
         response = { success: true, data, message, meta };
       } else {
@@ -44,11 +29,21 @@ export class ResponseMiddleware implements NestMiddleware {
         req.query.pageSize &&
         req.query.total
       ) {
-        response.meta = {
+        response.meta = PaginatedMetaSchema.parse({
           page: Number(req.query.page),
           pageSize: Number(req.query.pageSize),
           total: Number(req.query.total),
-        };
+        });
+      }
+
+      try {
+        if (Array.isArray(response.data) && response.meta) {
+          response = PaginatedResponseSchema(z.any()).parse(response);
+        } else {
+          response = GenericResponseSchema(z.any()).parse(response);
+        }
+      } catch (e) {
+        throw new InternalServerErrorException('Invalid response format');
       }
 
       return originalJson(response);

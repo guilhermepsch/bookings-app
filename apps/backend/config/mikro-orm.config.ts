@@ -4,7 +4,6 @@ import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 const isProduction = process.env.NODE_ENV === 'production';
 
 const config: Options<PostgreSqlDriver> = {
-
   driver: PostgreSqlDriver,
   dbName: 'bookings',
   host: process.env.DB_HOST || 'localhost',

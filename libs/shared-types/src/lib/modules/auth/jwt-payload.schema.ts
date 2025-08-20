@@ -1,8 +1,8 @@
 import { z } from 'zod';
-import { Role } from '../users/user-roles.dto';
+import { Role } from '../users/user-constants.dto';
 
 export const JwtPayloadSchema = z.object({
-  sub: z.string(),
+  sub: z.string().uuid(),
   email: z.string().email(),
   role: z.enum([Role.USER, Role.ADMIN]),
   exp: z.number(),

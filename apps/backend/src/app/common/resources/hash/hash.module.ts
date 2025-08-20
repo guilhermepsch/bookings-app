@@ -1,6 +1,6 @@
-import { BcryptHashService } from '@common/resources/hash/data/bcrypt/bcrypt.hash.service';
 import { IHashServiceSymbol } from './domain/hash.service.interface';
 import { Module } from '@nestjs/common';
+import { BcryptHashService } from './data/bcrypt/bcrypt.hash.service';
 
 @Module({
   providers: [{

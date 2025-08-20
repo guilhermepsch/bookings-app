@@ -1,4 +1,3 @@
-
 export const ILoggerService = Symbol('IUserRepository');
 
 export interface ILoggerService {

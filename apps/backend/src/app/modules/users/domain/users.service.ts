@@ -4,13 +4,13 @@ import {
 } from './users.repository.interface';
 import {
   Inject,
-  Injectable,
-  UnprocessableEntityException,
+  Injectable, NotFoundException,
+  UnprocessableEntityException
 } from '@nestjs/common';
 import { User } from './user';
 import { v4 as uuid } from 'uuid';
 import { CreateUserDto } from '@bookings-app/shared-types';
-import { IHashService, IHashServiceSymbol } from '@common/resources/hash/domain/hash.service.interface';
+import { IHashService, IHashServiceSymbol } from '../../../common/resources/hash/domain/hash.service.interface';
 
 @Injectable()
 export class UsersService {
@@ -30,7 +30,6 @@ export class UsersService {
 
     const user = new User(
       uuid(),
-      dto.name,
       dto.email,
       await this.hashService.hash(dto.password),
       dto.role
@@ -39,10 +38,18 @@ export class UsersService {
   }
 
   async getUserById(id: string): Promise<User | null> {
-    return this.repository.findById(id);
+    const user = await this.repository.findById(id);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
   }
 
   async getUserByEmail(email: string): Promise<User | null> {
-    return this.repository.findByEmail(email);
+    const user = await this.repository.findByEmail(email);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
   }
 }

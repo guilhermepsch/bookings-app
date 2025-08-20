@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
-import { UsersModule } from '@users/users.module';
 import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
-import { HashModule } from '@common/resources/hash/hash.module';
-import { AuthController } from '@modules/auth/presentation/auth.controller';
-import { AuthService } from '@modules/auth/domain/auth.service';
-import { ConfigServiceConstants } from '@config/config-service.constants';
 import { APP_GUARD } from '@nestjs/core';
-import { AuthGuard } from '@common/guards/auth.guard';
+import { ConfigServiceConstants } from '../../../../config/config-service.constants';
+import { UsersModule } from '../users/users.module';
+import { HashModule } from '../../common/resources/hash/hash.module';
+import { AuthController } from './presentation/auth.controller';
+import { AuthService } from './domain/auth.service';
+import { AuthGuard } from '../../common/guards/auth.guard';
 
 @Module({
   imports: [

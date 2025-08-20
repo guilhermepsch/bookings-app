@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { IHashService, IHashServiceSymbol } from '@common/resources/hash/domain/hash.service.interface';
 import { JwtService } from '@nestjs/jwt';
-import { UsersService } from '@users/domain/users.service';
-import { SignInDto } from '@bookings-app/shared-types';
+import { SignInDto, SignInResponse } from '@bookings-app/shared-types';
+import { UsersService } from '../../users/domain/users.service';
+import { IHashService, IHashServiceSymbol } from '../../../common/resources/hash/domain/hash.service.interface';
 
 @Injectable()
 export class AuthService {
@@ -12,7 +12,7 @@ export class AuthService {
     @Inject(IHashServiceSymbol) private readonly hashService: IHashService
   ) {}
 
-  async signIn(dto: SignInDto) {
+  async signIn(dto: SignInDto): Promise<SignInResponse> {
     const user = await this.usersService.getUserByEmail(dto.email);
     if (!user) {
       throw new Error('User not found');

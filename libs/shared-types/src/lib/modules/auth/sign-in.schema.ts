@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { JwtPayload } from './jwt-payload.schema';
 
 export const SignInSchema = z.object({
   email: z.string().email(),
@@ -6,3 +7,8 @@ export const SignInSchema = z.object({
 });
 
 export type SignInDto = z.infer<typeof SignInSchema>;
+
+export type SignInResponse = {
+  token: string;
+  payload: JwtPayload
+};

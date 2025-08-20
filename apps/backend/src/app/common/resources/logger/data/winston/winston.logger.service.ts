@@ -1,6 +1,6 @@
-import { ILoggerService } from '@common/resources/logger/domain/logger.service.interface';
 import { createLogger, format, transports, Logger } from 'winston';
 import { Injectable } from '@nestjs/common';
+import { ILoggerService } from '../../domain/logger.service.interface';
 
 @Injectable()
 export class WinstonLoggerService implements ILoggerService {
