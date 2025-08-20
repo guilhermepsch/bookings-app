@@ -4,13 +4,21 @@ import {
 } from './users.repository.interface';
 import {
   Inject,
-  Injectable, NotFoundException,
-  UnprocessableEntityException
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import { User } from './user';
 import { v4 as uuid } from 'uuid';
-import { CreateUserDto } from '@bookings-app/shared-types';
-import { IHashService, IHashServiceSymbol } from '../../../common/resources/hash/domain/hash.service.interface';
+import {
+  CreateUserDto,
+  ReadUsersDto,
+  ResponseUserDto,
+} from '@bookings-app/shared-types';
+import {
+  IHashService,
+  IHashServiceSymbol,
+} from '../../../common/resources/hash/domain/hash.service.interface';
 
 @Injectable()
 export class UsersService {
@@ -20,7 +28,7 @@ export class UsersService {
     @Inject(IHashServiceSymbol) private readonly hashService: IHashService
   ) {}
 
-  async create(dto: CreateUserDto): Promise<User> {
+  async create(dto: CreateUserDto): Promise<ResponseUserDto> {
     const existing = await this.repository.findByEmail(dto.email);
     if (existing) {
       throw new UnprocessableEntityException(
@@ -32,24 +40,58 @@ export class UsersService {
       uuid(),
       dto.email,
       await this.hashService.hash(dto.password),
-      dto.role
+      dto.role,
+      new Date(),
+      new Date()
     );
-    return await this.repository.save(user);
+    const saved = await this.repository.save(user);
+    return this.mapToResponseDto(saved);
   }
 
-  async getUserById(id: string): Promise<User | null> {
+  async find(query: ReadUsersDto) {
+    const { users, total } = await this.repository.find(query);
+    return {
+      data: users.map((user) => this.mapToResponseDto(user)),
+      meta: {
+        total,
+        page: query.page,
+        pageSize: query.pageSize,
+      },
+    };
+  }
+
+  async getUserById(id: string): Promise<ResponseUserDto> {
     const user = await this.repository.findById(id);
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    return user;
+    return this.mapToResponseDto(user);
   }
 
-  async getUserByEmail(email: string): Promise<User | null> {
+  async getUserByEmail(email: string): Promise<User> {
     const user = await this.repository.findByEmail(email);
     if (!user) {
       throw new NotFoundException('User not found');
     }
     return user;
+  }
+
+  async delete(id: string): Promise<void> {
+    const user = await this.repository.findById(id);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    await this.repository.delete(id);
+  }
+
+  private mapToResponseDto(user: User): ResponseUserDto {
+    return {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+      customerId: user.customerId,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    };
   }
 }

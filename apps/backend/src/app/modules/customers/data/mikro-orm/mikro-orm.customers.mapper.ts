@@ -11,17 +11,8 @@ export class CustomerMapper {
       entity.cpf,
       entity.reservations.getItems().map(r => r.id),
       entity.user.id,
+      entity.createdAt,
+      entity.updatedAt
     );
-  }
-
-  static toEntity(domain: Customer): MikroOrmCustomerEntity {
-    const entity = new MikroOrmCustomerEntity();
-    entity.id = domain.id;
-    entity.fullName = domain.fullName;
-    entity.email = domain.email;
-    entity.phone = domain.phone;
-    entity.cpf = domain.cpf;
-    entity.user = { id: domain.userId } as any;
-    return entity;
   }
 }

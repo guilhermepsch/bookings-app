@@ -8,19 +8,10 @@ export class MikroOrmUsersMapper {
       entity.email,
       entity.secret,
       entity.role,
-      entity.customer?.id, // optional
+      entity.createdAt,
+      entity.updatedAt,
+      entity.customer?.id,
+      entity.accommodations.map((a) => a.id)
     );
-  }
-
-  static toEntity(domain: User): MikroOrmUserEntity {
-    const entity = new MikroOrmUserEntity();
-    entity.id = domain.id;
-    entity.email = domain.email;
-    entity.secret = domain.secret;
-    entity.role = domain.role;
-    if (domain.customerId) {
-      entity.customer = { id: domain.customerId } as any;
-    }
-    return entity;
   }
 }

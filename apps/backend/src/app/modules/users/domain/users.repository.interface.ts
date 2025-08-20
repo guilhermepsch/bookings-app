@@ -1,9 +1,12 @@
+import { ReadUsersDto } from '@bookings-app/shared-types';
 import { User } from './user';
 
 export const IUsersRepositoryToken = Symbol('IUserRepository');
 
 export interface IUsersRepository {
+  save(user: User): Promise<User>;
   findById(id: string): Promise<User | null>;
   findByEmail(email: string): Promise<User | null>;
-  save(user: User): Promise<User>;
+  find(query: ReadUsersDto): Promise<{ users: User[]; total: number }>;
+  delete(id: string): Promise<void>;
 }

@@ -1,7 +1,11 @@
 import { Injectable, InternalServerErrorException, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
-import { GenericResponseSchema, PaginatedMetaSchema, PaginatedResponseSchema } from '@bookings-app/shared-types';
+import {
+  GenericResponseSchema,
+  PaginatedMetaSchema,
+  PaginatedResponseSchema,
+} from '@bookings-app/shared-types';
 
 @Injectable()
 export class ResponseMiddleware implements NestMiddleware {
@@ -17,32 +21,29 @@ export class ResponseMiddleware implements NestMiddleware {
 
       if (body && typeof body === 'object' && 'data' in (body as any)) {
         const { data, message, meta } = body as any;
-        response = { success: true, data, message, meta };
+
+        response = { success: true, data, message };
+        if (meta) {
+          response.meta = meta;
+        }
       } else {
         response = { success: true, data: body };
       }
 
-      if (
-        Array.isArray(response.data) &&
-        !response.meta &&
-        req.query.page &&
-        req.query.pageSize &&
-        req.query.total
-      ) {
-        response.meta = PaginatedMetaSchema.parse({
-          page: Number(req.query.page),
-          pageSize: Number(req.query.pageSize),
-          total: Number(req.query.total),
-        });
-      }
-
       try {
         if (Array.isArray(response.data) && response.meta) {
+          response.meta = PaginatedMetaSchema.parse({
+            total: Number(response.meta.total),
+            page: Number(response.meta.page),
+            pageSize: Number(response.meta.pageSize),
+          });
+
           response = PaginatedResponseSchema(z.any()).parse(response);
         } else {
           response = GenericResponseSchema(z.any()).parse(response);
         }
       } catch (e) {
+        console.error('Response validation failed', e);
         throw new InternalServerErrorException('Invalid response format');
       }
 

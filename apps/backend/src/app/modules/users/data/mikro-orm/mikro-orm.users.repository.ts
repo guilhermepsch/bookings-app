@@ -4,12 +4,12 @@ import { MikroOrmUsersMapper } from './mikro-orm.users.mapper';
 import { MikroOrmUserEntity } from './mikro-orm.user.entity';
 import { EntityRepository } from '@mikro-orm/core';
 import { IUsersRepository } from '../../domain/users.repository.interface';
-
+import { ReadUsersDto } from '@bookings-app/shared-types';
 
 export class MikroOrmUsersRepository implements IUsersRepository {
   constructor(
     @InjectRepository(MikroOrmUserEntity)
-    private readonly repo: EntityRepository<MikroOrmUserEntity>,
+    private readonly repo: EntityRepository<MikroOrmUserEntity>
   ) {}
 
   async findById(id: string): Promise<User | null> {
@@ -23,9 +23,44 @@ export class MikroOrmUsersRepository implements IUsersRepository {
   }
 
   async save(user: User): Promise<User> {
-    const entity = MikroOrmUsersMapper.toEntity(user);
+    const entity = new MikroOrmUserEntity();
+    entity.id = user.id;
+    entity.email = user.email;
+    entity.secret = user.secret;
+    entity.role = user.role;
+    entity.createdAt = user.createdAt;
+    entity.updatedAt = user.updatedAt;
     await this.repo.insert(entity);
     return user;
   }
 
+  async find(query: ReadUsersDto): Promise<{ users: User[]; total: number }> {
+    const filters: any = {};
+    if (query.name) {
+      filters.fullName = { $like: `%${query.name}%` };
+    }
+
+    if (query.email) {
+      filters.email = { $like: `%${query.email}%` };
+    }
+
+    if (query.role) {
+      filters.role = query.role;
+    }
+
+    const page = query.page;
+    const limit = query.pageSize;
+
+    const users = await this.repo.find(filters, {
+      limit,
+      offset: (page - 1) * limit,
+    });
+    const total = await this.repo.count(filters);
+
+    return { users: users.map(MikroOrmUsersMapper.toDomain), total };
+  }
+
+  async delete(id: string): Promise<void> {
+    await this.repo.nativeDelete({ id });
+  }
 }

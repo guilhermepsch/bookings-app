@@ -1,10 +1,10 @@
 import { z } from 'zod';
-import { Role } from '../users/user-constants.dto';
+import { UserRoles } from '../../users/user-constants.dto';
 
 export const JwtPayloadSchema = z.object({
   sub: z.string().uuid(),
   email: z.string().email(),
-  role: z.enum([Role.USER, Role.ADMIN]),
+  role: z.enum([UserRoles.USER, UserRoles.ADMIN]),
   exp: z.number(),
   iat: z.number(),
 }).strict();

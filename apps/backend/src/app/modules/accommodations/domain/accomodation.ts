@@ -18,6 +18,9 @@ export class Accommodation {
     public readonly longitude: number,
     public readonly pricePerNight: number,
     public readonly status: AccomodationStatus,
+    public readonly userId: string,
     public readonly reservationIds: string[] = [],
+    public readonly createdAt: Date,
+    public readonly updatedAt: Date
   ) {}
 }

@@ -7,5 +7,7 @@ export class Customer {
     public readonly cpf: string,
     public readonly reservationIds: string[] = [],
     public readonly userId: string,
+    public readonly createdAt: Date,
+    public readonly updatedAt: Date
   ) {}
 }

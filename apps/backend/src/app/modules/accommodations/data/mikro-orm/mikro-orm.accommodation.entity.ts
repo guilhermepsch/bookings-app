@@ -1,11 +1,13 @@
-import { Entity, PrimaryKey, Property, OneToMany, Collection } from '@mikro-orm/core';
+import { Entity, PrimaryKey, Property, OneToMany, Collection, ManyToOne } from '@mikro-orm/core';
 import { AccomodationStatus } from '@bookings-app/shared-types';
 import { MikroOrmReservationEntity } from '../../../reservations/data/mikro-orm/mikro-orm.reservation.entity';
+import { MikroOrmUserEntity } from '../../../users/data/mikro-orm/mikro-orm.user.entity';
+import { v4 as uuid } from 'uuid';
 
 @Entity({ tableName: 'accommodations' })
 export class MikroOrmAccommodationEntity {
-  @PrimaryKey()
-  id!: string;
+  @PrimaryKey({ type: 'uuid' })
+  id: string = uuid();
 
   @Property()
   type!: string;
@@ -54,4 +56,13 @@ export class MikroOrmAccommodationEntity {
 
   @OneToMany(() => MikroOrmReservationEntity, r => r.accommodation)
   reservations = new Collection<MikroOrmReservationEntity>(this);
+
+  @ManyToOne(() => MikroOrmUserEntity)
+  user!: MikroOrmUserEntity
+
+  @Property({ onCreate: () => new Date() })
+  createdAt!: Date;
+
+  @Property({ onUpdate: () => new Date(), onCreate: () => new Date() })
+  updatedAt!: Date;
 }
