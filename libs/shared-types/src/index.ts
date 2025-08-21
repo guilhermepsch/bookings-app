@@ -18,4 +18,7 @@ export * from './lib/modules/accomodations/schemas/read-accommodation.schema';
 export * from './lib/modules/accomodations/schemas/update-accomodation.schema';
 
 export * from './lib/modules/reservations/reservation-constants';
+export * from './lib/modules/reservations/schemas/create-reservation.schema';
+export * from './lib/modules/reservations/schemas/read-reservation.schema';
+export * from './lib/modules/reservations/schemas/update-reservation.schema';
 

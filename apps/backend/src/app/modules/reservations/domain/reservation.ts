@@ -3,7 +3,7 @@ import { ReservationStatus } from '@bookings-app/shared-types';
 export class Reservation {
   constructor(
     public readonly id: string,
-    public readonly customerId: string,
+    public readonly userId: string,
     public readonly accommodationId: string,
     public readonly checkIn: Date,
     public readonly checkOut: Date,

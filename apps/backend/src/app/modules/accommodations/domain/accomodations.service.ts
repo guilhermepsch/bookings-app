@@ -100,7 +100,11 @@ export class AccommodationsService {
   }
 
   async getById(id: string): Promise<Accommodation> {
-    return this.repository.findById(id);
+    const accommodation = await this.repository.findById(id);
+    if (!accommodation) {
+      throw new NotFoundException('Accommodation not found');
+    }
+    return accommodation;
   }
 
   async delete(id: string, userId: string): Promise<void> {
