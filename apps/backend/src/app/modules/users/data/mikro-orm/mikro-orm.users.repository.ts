@@ -27,6 +27,9 @@ export class MikroOrmUsersRepository implements IUsersRepository {
     entity.id = user.id;
     entity.email = user.email;
     entity.secret = user.secret;
+    entity.fullName = user.fullName;
+    entity.phone = user.phone;
+    entity.cpf = user.cpf;
     entity.role = user.role;
     entity.createdAt = user.createdAt;
     entity.updatedAt = user.updatedAt;
@@ -36,8 +39,16 @@ export class MikroOrmUsersRepository implements IUsersRepository {
 
   async find(query: ReadUsersDto): Promise<{ users: User[]; total: number }> {
     const filters: any = {};
-    if (query.name) {
-      filters.fullName = { $like: `%${query.name}%` };
+    if (query.fullName) {
+      filters.fullName = { $like: `%${query.fullName}%` };
+    }
+
+    if (query.phone) {
+      filters.phone = { $like: `%${query.phone}%` };
+    }
+
+    if (query.cpf) {
+      filters.cpf = { $like: `%${query.cpf}%` };
     }
 
     if (query.email) {

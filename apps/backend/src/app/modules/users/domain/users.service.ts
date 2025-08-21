@@ -40,6 +40,9 @@ export class UsersService {
       uuid(),
       dto.email,
       await this.hashService.hash(dto.password),
+      dto.fullName,
+      dto.phone,
+      dto.cpf,
       dto.role,
       new Date(),
       new Date()
@@ -88,8 +91,10 @@ export class UsersService {
     return {
       id: user.id,
       email: user.email,
+      fullName: user.fullName,
+      phone: user.phone,
+      cpf: user.cpf,
       role: user.role,
-      customerId: user.customerId,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };

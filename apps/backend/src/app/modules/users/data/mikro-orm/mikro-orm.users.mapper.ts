@@ -7,11 +7,14 @@ export class MikroOrmUsersMapper {
       entity.id,
       entity.email,
       entity.secret,
+      entity.fullName,
+      entity.phone,
+      entity.cpf,
       entity.role,
       entity.createdAt,
       entity.updatedAt,
-      entity.customer?.id,
-      entity.accommodations.map((a) => a.id)
+      entity.accommodations.map((a) => a.id),
+      entity.reservations.map((r) => r.id)
     );
   }
 }

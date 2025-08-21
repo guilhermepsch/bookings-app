@@ -5,7 +5,7 @@ export class ReservationMapper {
   static toDomain(entity: MikroOrmReservationEntity): Reservation {
     return new Reservation(
       entity.id,
-      entity.customer.id,
+      entity.user.id,
       entity.accommodation.id,
       entity.checkIn,
       entity.checkOut,

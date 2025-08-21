@@ -1,8 +1,8 @@
-import { Collection, Entity, OneToMany, OneToOne, PrimaryKey, Property } from '@mikro-orm/core';
+import { Collection, Entity, OneToMany, PrimaryKey, Property } from '@mikro-orm/core';
 import { v4 as uuid } from 'uuid';
 import { UserRoles } from '@bookings-app/shared-types';
-import { MikroOrmCustomerEntity } from '../../../customers/data/mikro-orm/mikro-orm.customer.entity';
 import { MikroOrmAccommodationEntity } from '../../../accommodations/data/mikro-orm/mikro-orm.accommodation.entity';
+import { MikroOrmReservationEntity } from '../../../reservations/data/mikro-orm/mikro-orm.reservation.entity';
 
 @Entity({ tableName: 'users' })
 export class MikroOrmUserEntity {
@@ -13,13 +13,22 @@ export class MikroOrmUserEntity {
   email!: string;
 
   @Property()
+  fullName!: string;
+
+  @Property()
+  phone!: string;
+
+  @Property({ unique: true })
+  cpf!: string;
+
+  @Property()
   secret!: string;
 
   @Property({ type: 'string' })
   role: UserRoles = UserRoles.USER;
 
-  @OneToOne(() => MikroOrmCustomerEntity, c => c.user, { nullable: true })
-  customer?: MikroOrmCustomerEntity;
+  @OneToMany(() => MikroOrmReservationEntity, r => r.user, { nullable: true, eager: true })
+  reservations = new Collection<MikroOrmReservationEntity>(this);
 
   @OneToMany(() => MikroOrmAccommodationEntity, c => c.user, { nullable: true, eager: true })
   accommodations = new Collection<MikroOrmAccommodationEntity>(this);

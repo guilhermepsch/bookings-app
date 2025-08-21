@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ReservationStatus } from '@bookings-app/shared-types';
+import { ReservationStatus } from '../reservation-constants';
 
 // export class Reservation {
 //   constructor(

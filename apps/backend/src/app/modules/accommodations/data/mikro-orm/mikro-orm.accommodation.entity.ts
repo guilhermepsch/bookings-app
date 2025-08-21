@@ -1,5 +1,5 @@
 import { Entity, PrimaryKey, Property, OneToMany, Collection, ManyToOne } from '@mikro-orm/core';
-import { AccomodationStatus } from '@bookings-app/shared-types';
+import { AccommodationStatus } from '@bookings-app/shared-types';
 import { MikroOrmReservationEntity } from '../../../reservations/data/mikro-orm/mikro-orm.reservation.entity';
 import { MikroOrmUserEntity } from '../../../users/data/mikro-orm/mikro-orm.user.entity';
 import { v4 as uuid } from 'uuid';
@@ -52,9 +52,9 @@ export class MikroOrmAccommodationEntity {
   pricePerNight!: number;
 
   @Property()
-  status!: AccomodationStatus;
+  status!: AccommodationStatus;
 
-  @OneToMany(() => MikroOrmReservationEntity, r => r.accommodation)
+  @OneToMany(() => MikroOrmReservationEntity, r => r.accommodation, { eager: true })
   reservations = new Collection<MikroOrmReservationEntity>(this);
 
   @ManyToOne(() => MikroOrmUserEntity)

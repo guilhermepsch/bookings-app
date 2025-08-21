@@ -5,6 +5,7 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { AccommodationsModule } from './modules/accommodations/accommodations.module';
 import config from '../../config/mikro-orm.config';
 
 @Module({
@@ -16,6 +17,7 @@ import config from '../../config/mikro-orm.config';
     MikroOrmModule.forRoot({ ...config, autoLoadEntities: true }),
     UsersModule,
     AuthModule,
+    AccommodationsModule
   ],
   controllers: [AppController],
   providers: [AppService],

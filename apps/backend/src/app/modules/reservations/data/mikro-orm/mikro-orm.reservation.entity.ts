@@ -1,16 +1,16 @@
 import { Entity, PrimaryKey, Property, ManyToOne } from '@mikro-orm/core';
 import { ReservationStatus } from '@bookings-app/shared-types';
-import { MikroOrmCustomerEntity } from '../../../customers/data/mikro-orm/mikro-orm.customer.entity';
 import { MikroOrmAccommodationEntity } from '../../../accommodations/data/mikro-orm/mikro-orm.accommodation.entity';
 import { v4 as uuid } from 'uuid';
+import { MikroOrmUserEntity } from '../../../users/data/mikro-orm/mikro-orm.user.entity';
 
 @Entity({ tableName: 'reservas' })
 export class MikroOrmReservationEntity {
   @PrimaryKey({ type: 'uuid' })
   id: string = uuid();
 
-  @ManyToOne(() => MikroOrmCustomerEntity)
-  customer!: MikroOrmCustomerEntity;
+  @ManyToOne(() => MikroOrmUserEntity)
+  user!: MikroOrmUserEntity;
 
   @ManyToOne(() => MikroOrmAccommodationEntity)
   accommodation!: MikroOrmAccommodationEntity;

@@ -13,6 +13,9 @@ export * from './lib/modules/auth/schemas/sign-in.schema';
 export * from './lib/modules/auth/schemas/jwt-payload.schema';
 
 export * from './lib/modules/accomodations/accomodation-constants';
+export * from './lib/modules/accomodations/schemas/create-accommodation.schema';
+export * from './lib/modules/accomodations/schemas/read-accommodation.schema';
+export * from './lib/modules/accomodations/schemas/update-accomodation.schema';
 
 export * from './lib/modules/reservations/reservation-constants';
 
