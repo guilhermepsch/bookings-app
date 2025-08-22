@@ -9,29 +9,36 @@ export type ToastSeverity = 'success' | 'info' | 'warn' | 'error';
 export class ToastService {
   private messageService = inject(MessageService);
 
-  show(
+  private showToast(
     severity: ToastSeverity,
     summary: string,
     detail: string,
     life = 3000
   ) {
-    this.messageService.add({ severity, summary, detail, life });
+    this.messageService.add({
+      severity,
+      summary,
+      detail,
+      life,
+      styleClass: `custom-toast ${severity}-toast`,
+    });
   }
 
+
   success(summary: string, detail: string, life?: number) {
-    this.show('success', summary, detail, life);
+    this.showToast('success', summary, detail, life);
   }
 
   info(summary: string, detail: string, life?: number) {
-    this.show('info', summary, detail, life);
+    this.showToast('info', summary, detail, life);
   }
 
   warn(summary: string, detail: string, life?: number) {
-    this.show('warn', summary, detail, life);
+    this.showToast('warn', summary, detail, life);
   }
 
   error(summary: string, detail: string, life?: number) {
-    this.show('error', summary, detail, life);
+    this.showToast('error', summary, detail, life);
   }
 
   clear() {
