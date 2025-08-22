@@ -6,15 +6,11 @@ import {
   CreateReservationDto,
   ReadReservationsDto,
   ReservationStatus,
-  UpdateReservationDto,
-  UserRoles,
+  UpdateReservationDto
 } from '@bookings-app/shared-types';
 import { Reservation } from './reservation';
 import { v4 as uuid } from 'uuid';
-import {
-  IReservationsRepository,
-  IReservationsRepositoryToken,
-} from './reservations.repository.interface';
+import { IReservationsRepository, IReservationsRepositoryToken } from './reservations.repository.interface';
 
 export class ReservationsService {
   constructor(
@@ -89,6 +85,13 @@ export class ReservationsService {
       throw new BadRequestException(
         'You are not authorized to update this reservation'
       );
+    }
+    if (domain.status === ReservationStatus.CANCELED){
+      throw new BadRequestException('You cannot update a canceled reservation');
+    }
+    const now = new Date();
+    if (now.getTime() - domain.createdAt.getTime() > 24 * 60 * 60 * 1000) {
+      throw new BadRequestException('You cannot update a reservation that was made more than 24 hours ago');
     }
     const updatedDomain = new Reservation(
       domain.id,
