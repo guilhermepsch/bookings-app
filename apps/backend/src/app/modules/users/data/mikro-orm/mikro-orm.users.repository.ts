@@ -22,6 +22,11 @@ export class MikroOrmUsersRepository implements IUsersRepository {
     return orm ? MikroOrmUsersMapper.toDomain(orm) : null;
   }
 
+  async findByCpf(cpf: string): Promise<User | null> {
+    const orm = await this.repo.findOne({ cpf });
+    return orm ? MikroOrmUsersMapper.toDomain(orm) : null;
+  }
+
   async save(user: User): Promise<User> {
     const entity = new MikroOrmUserEntity();
     entity.id = user.id;

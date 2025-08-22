@@ -19,6 +19,7 @@ export class UsersController {
     return await this.usersService.create(body);
   }
 
+  @Public()
   @Get(':id')
   async findById(
     @Param(new ZodPipe(IdParamUuidSchema)) params: IdParamUuidDto
@@ -26,6 +27,7 @@ export class UsersController {
     return await this.usersService.getUserById(params.id);
   }
 
+  @Public()
   @Get()
   async find(
     @Query(new ZodPipe(ReadUsersSchema)) query: ReadUsersDto
@@ -33,8 +35,4 @@ export class UsersController {
     return await this.usersService.find(query);
   }
 
-  @Delete(':id')
-  async delete(@Param(new ZodPipe(IdParamUuidSchema)) params: IdParamUuidDto) {
-    await this.usersService.delete(params.id);
-  }
 }

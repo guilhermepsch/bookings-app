@@ -35,6 +35,12 @@ export class UsersService {
         'User already exists with this email'
       );
     }
+    const existingCpf = await this.repository.findByCpf(dto.cpf);
+    if (existingCpf) {
+      throw new UnprocessableEntityException(
+        'User already exists with this cpf'
+      );
+    }
 
     const user = new User(
       uuid(),

@@ -3,10 +3,11 @@ import { UsersService } from '../../users/domain/users.service';
 import { AccommodationsService } from '../../accommodations/domain/accomodations.service';
 import {
   AccommodationStatus,
-  CreateReservationDto, ReadReservationsDto,
+  CreateReservationDto,
+  ReadReservationsDto,
   ReservationStatus,
   UpdateReservationDto,
-  UserRoles
+  UserRoles,
 } from '@bookings-app/shared-types';
 import { Reservation } from './reservation';
 import { v4 as uuid } from 'uuid';
@@ -26,13 +27,9 @@ export class ReservationsService {
   ) {}
 
   async create(dto: CreateReservationDto) {
-    const user = await this.usersService.getUserById(dto.userId);
     const accommodation = await this.accommodationsService.getById(
       dto.accommodationId
     );
-    if (user.role !== UserRoles.USER) {
-      throw new BadRequestException('User is not a customer');
-    }
     if (accommodation.status !== AccommodationStatus.ACTIVE) {
       throw new BadRequestException('Accommodation is not available');
     }
@@ -87,7 +84,9 @@ export class ReservationsService {
       throw new NotFoundException('Reservation not found');
     }
     if (domain.userId !== userId) {
-      throw new BadRequestException('You are not authorized to update this reservation');
+      throw new BadRequestException(
+        'You are not authorized to update this reservation'
+      );
     }
     const updatedDomain = new Reservation(
       domain.id,
@@ -109,12 +108,14 @@ export class ReservationsService {
       throw new NotFoundException('Reservation not found');
     }
     if (domain.userId !== userId) {
-      throw new BadRequestException('You are not authorized to delete this reservation');
+      throw new BadRequestException(
+        'You are not authorized to delete this reservation'
+      );
     }
     return this.repository.delete(id);
   }
 
-  async findBy(dto: ReadReservationsDto){
+  async findBy(dto: ReadReservationsDto) {
     const { reservations, total } = await this.repository.find(dto);
     return {
       data: reservations,
@@ -123,15 +124,14 @@ export class ReservationsService {
         page: dto.page,
         pageSize: dto.pageSize,
       },
-    }
+    };
   }
 
   async findById(id: string) {
     const domain = await this.repository.findById(id);
     if (!domain) {
-      throw new NotFoundException('Reservation not found')
+      throw new NotFoundException('Reservation not found');
     }
     return domain;
   }
-
 }

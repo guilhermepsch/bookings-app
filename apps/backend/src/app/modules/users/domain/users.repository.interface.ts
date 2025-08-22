@@ -7,6 +7,7 @@ export interface IUsersRepository {
   save(user: User): Promise<User>;
   findById(id: string): Promise<User | null>;
   findByEmail(email: string): Promise<User | null>;
+  findByCpf(cpf: string): Promise<User | null>;
   find(query: ReadUsersDto): Promise<{ users: User[]; total: number }>;
   delete(id: string): Promise<void>;
 }

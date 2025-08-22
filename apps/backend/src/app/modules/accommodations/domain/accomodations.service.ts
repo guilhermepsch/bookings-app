@@ -20,11 +20,6 @@ export class AccommodationsService {
   ) {}
 
   async create(dto: CreateAccomodationDto): Promise<Accommodation> {
-    const user = await this.usersService.getUserById(dto.userId);
-    if (user.role !== UserRoles.ADMIN) {
-      throw new BadRequestException('User is not an admin');
-    }
-
     const domainAccommodation = new Accommodation(
       uuid(),
       dto.type,
