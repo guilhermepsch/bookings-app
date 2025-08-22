@@ -6,8 +6,8 @@ import {
   Param,
   Post,
   Put,
-  Query,
-  Request,
+  Query, Req,
+  Request
 } from '@nestjs/common';
 import { RequestWithUser } from '../../../common/guards/auth.guard';
 import { ZodPipe } from 'src/app/common/pipes/zod-validation.pipe';
@@ -33,9 +33,10 @@ export class ReservationsController {
   @Roles(UserRoles.USER)
   @Post()
   async create(
-    @Body(new ZodPipe(CreateReservationSchema)) body: CreateReservationDto
+    @Body(new ZodPipe(CreateReservationSchema)) body: CreateReservationDto,
+    @Req() req: RequestWithUser
   ) {
-    return await this.service.create(body);
+    return await this.service.create(body, req.user.sub);
   }
 
   @Public()
@@ -62,12 +63,4 @@ export class ReservationsController {
     return await this.service.update(params.id, req.user.sub, body);
   }
 
-  @Roles(UserRoles.USER)
-  @Delete(':id')
-  async delete(
-    @Param(new ZodPipe(IdParamUuidSchema)) params: IdParamUuidDto,
-    @Request() req: RequestWithUser
-  ) {
-    await this.service.delete(params.id, req.user.sub);
-  }
 }

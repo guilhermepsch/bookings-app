@@ -7,7 +7,7 @@ export const ReadReservationsSchema = PaginationQuerySchema.extend({
   accommodation: z.string().uuid().optional(),
   checkIn: z.date().optional(),
   checkOut: z.date().optional(),
-  status: z.enum([ReservationStatus.CONFIRMED, ReservationStatus.CANCELED]),
+  status: z.enum([ReservationStatus.CONFIRMED, ReservationStatus.CANCELED]).optional(),
 });
 
 export type ReadReservationsDto = z.infer<typeof ReadReservationsSchema>;

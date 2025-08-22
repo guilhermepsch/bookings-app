@@ -26,21 +26,23 @@ export class ReservationsService {
     private readonly accommodationsService: AccommodationsService
   ) {}
 
-  async create(dto: CreateReservationDto) {
+  async create(dto: CreateReservationDto, userId: string) {
     const accommodation = await this.accommodationsService.getById(
       dto.accommodationId
     );
+    const checkIn = new Date(dto.checkIn);
+    const checkOut = new Date(dto.checkOut);
     if (accommodation.status !== AccommodationStatus.ACTIVE) {
       throw new BadRequestException('Accommodation is not available');
     }
-    if (dto.checkIn >= dto.checkOut) {
+    if (checkIn >= checkOut) {
       throw new BadRequestException('Check-in must be before check-out');
     }
-    if (dto.checkIn < new Date()) {
+    if (checkIn < new Date()) {
       throw new BadRequestException('Check-in date must be in the future');
     }
     const nights = Math.ceil(
-      (dto.checkOut.getTime() - dto.checkIn.getTime()) / (1000 * 60 * 60 * 24)
+      (checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24)
     );
     if (nights <= 0) {
       throw new BadRequestException('Reservation must be at least 1 night');
@@ -50,11 +52,11 @@ export class ReservationsService {
     }
     const expectedPrice = nights * accommodation.pricePerNight;
     if (dto.totalPrice !== expectedPrice) {
-      throw new BadRequestException('Invalid total price');
+      throw new BadRequestException('Invalid total price, expected: ' + expectedPrice);
     }
     const { total } = await this.repository.find({
-      checkIn: dto.checkIn,
-      checkOut: dto.checkOut,
+      checkIn: checkIn,
+      checkOut: checkOut,
       accommodation: dto.accommodationId,
     });
     if (total > 0) {
@@ -65,10 +67,10 @@ export class ReservationsService {
 
     const domain = new Reservation(
       uuid(),
-      dto.userId,
+      userId,
       dto.accommodationId,
-      dto.checkIn,
-      dto.checkOut,
+      checkIn,
+      checkOut,
       expectedPrice,
       dto.status ?? ReservationStatus.CONFIRMED,
       new Date(),
