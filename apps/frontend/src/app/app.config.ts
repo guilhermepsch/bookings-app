@@ -1,5 +1,6 @@
 import {
   ApplicationConfig,
+  ErrorHandler,
   provideBrowserGlobalErrorListeners,
   provideZoneChangeDetection,
 } from '@angular/core';
@@ -9,10 +10,10 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { httpErrorInterceptor } from './core/interceptors/http-error.interceptor';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { MessageService } from 'primeng/api';
 import { baseUrlInterceptor } from './core/interceptors/base-url.interceptor';
+import { GlobalErrorFilter } from './core/filters/global-error.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -23,15 +24,10 @@ export const appConfig: ApplicationConfig = {
       },
     }),
     provideBrowserGlobalErrorListeners(),
+    { provide: ErrorHandler, useClass: GlobalErrorFilter },
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient(
-      withInterceptors([
-        baseUrlInterceptor,
-        httpErrorInterceptor,
-        authInterceptor,
-      ])
-    ),
+    provideHttpClient(withInterceptors([baseUrlInterceptor, authInterceptor])),
     MessageService,
   ],
 };

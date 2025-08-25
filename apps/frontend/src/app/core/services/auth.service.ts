@@ -5,6 +5,7 @@ import {
   SignInResponse,
   JwtPayload,
   JwtPayloadSchema,
+  SignInSchema,
 } from '@bookings-app/shared-types';
 import { AuthApiService } from './api/auth-api.service';
 
@@ -15,7 +16,6 @@ export class AuthService {
   private authApi = inject(AuthApiService);
 
   user = signal<SignInResponse | null>(null);
-  error = signal<string | null>(null);
   loading = signal<boolean>(false);
 
   private readonly TOKEN_KEY = 'auth_token';
@@ -32,9 +32,9 @@ export class AuthService {
 
   async login(payload: SignInDto) {
     this.loading.set(true);
-    this.error.set(null);
-
     try {
+      await SignInSchema.parseAsync(payload);
+
       const response = await firstValueFrom(this.authApi.login(payload));
       const payloadDecoded = this.decodeToken(response.data.token);
 
@@ -44,9 +44,6 @@ export class AuthService {
 
       localStorage.setItem(this.TOKEN_KEY, response.data.token);
       this.user.set({ token: response.data.token, payload: payloadDecoded });
-    } catch (err: any) {
-      this.error.set(err.message || 'Login failed');
-      this.user.set(null);
     } finally {
       this.loading.set(false);
     }

@@ -33,10 +33,6 @@ export class LoginComponent {
     return this.auth.loading();
   }
 
-  get errorMessage() {
-    return this.auth.error();
-  }
-
   get isLoggedIn() {
     return this.auth.isLoggedIn;
   }

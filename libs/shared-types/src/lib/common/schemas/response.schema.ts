@@ -21,6 +21,15 @@ export const PaginatedResponseSchema = <T extends z.ZodTypeAny>(itemSchema: T) =
     meta: PaginatedMetaSchema,
   });
 
+export const GenericErrorResponseSchema = z.object({
+  success: z.boolean(),
+  message: z.string(),
+  statusCode: z.number(),
+  errors: z.any(),
+})
+
+export type GenericErrorResponse = z.infer<typeof GenericErrorResponseSchema>;
+
 export type PaginatedMeta = z.infer<typeof PaginatedMetaSchema>;
 
 export type GenericResponseOf<T extends z.ZodTypeAny> = z.infer<

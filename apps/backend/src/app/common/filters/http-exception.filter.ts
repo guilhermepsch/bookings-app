@@ -6,13 +6,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-
-interface GenericErrorResponse {
-  success: false;
-  message: string;
-  statusCode: number;
-  errors?: any;
-}
+import { GenericErrorResponse } from '@bookings-app/shared-types';
 
 @Catch(HttpException)
 export class GlobalHttpExceptionFilter implements ExceptionFilter {
