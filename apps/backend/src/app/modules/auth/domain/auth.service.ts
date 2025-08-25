@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { SignInDto, SignInResponse } from '@bookings-app/shared-types';
 import { UsersService } from '../../users/domain/users.service';
@@ -15,14 +15,14 @@ export class AuthService {
   async signIn(dto: SignInDto): Promise<SignInResponse> {
     const user = await this.usersService.getUserByEmail(dto.email);
     if (!user) {
-      throw new Error('User not found');
+      throw new BadRequestException('User or password invalid');
     }
     const isPasswordValid = await this.hashService.compare(
       dto.password,
       user.secret
     );
     if (!isPasswordValid) {
-      throw new Error('Invalid password');
+      throw new BadRequestException('Email or password is invalid');
     }
     const payload = { sub: user.id, email: user.email, role: user.role };
     const token = this.jwtService.sign(payload);
